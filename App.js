@@ -1,20 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import AuthStack from './src/navigation/auth';
+import AppLoading from 'expo-app-loading';
+import { useFonts, Poppins_300Light, Poppins_400Regular, Poppins_500Medium, Poppins_700Bold, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import AppStack from './src/navigation/app';
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Poppins_300Light,
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_700Bold,
+    Poppins_600SemiBold
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+    {/* <AuthStack /> */}
+    <AppStack />
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
