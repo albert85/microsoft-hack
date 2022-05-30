@@ -1,0 +1,29 @@
+import React, { useState } from 'react';
+import { Button, Text, View, StyleSheet } from 'react-native';
+// import * as WebBrowser from 'expo-web-browser';
+
+export default function App() {
+  const [result, setResult] = useState(null);
+
+  const _handlePressButtonAsync = async () => {
+    // let result = await WebBrowser.openBrowserAsync('https://expo.dev');
+    // let result = await WebBrowser.openBrowserAsync('https://embarrassed-steam.surge.sh/');
+    setResult(result);
+    console.log(result)
+  };
+  return (
+    <View style={styles.container}>
+
+      <Button title="Open WebBrowser" onPress={_handlePressButtonAsync} />
+      
+      <Text>{result && JSON.stringify(result)}</Text>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+    container: {
+        flex:1,
+      backgroundColor:"#ff0",
+      padding:"20%"
+    },
+  })
