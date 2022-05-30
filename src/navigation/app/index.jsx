@@ -6,6 +6,7 @@ import tw from '../../../tailwind';
 import ItemDetailStack from './itemDetails';
 import VoiceSearch from '../../screens/VoiceSearch';
 import Account from '../../screens/Account';
+import OrderStack from './orders';
 
 const Stack = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ return(
     />
     <Stack.Screen
     name="Orders"
-    component={Dashboard}
+    component={OrderStack}
     options={{
       tabBarShowLabel: false,
       tabBarIcon: ({ focused }) => (<View style={tw`items-center p-3`}>

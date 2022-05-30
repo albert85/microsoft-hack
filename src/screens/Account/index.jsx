@@ -5,14 +5,15 @@ import ScreenNavigation from '../../components/screenNav';
 
 const Account = () => {
   return (
-    <ScrollView contentContainerStyle={tw`bg-white flex-1`}>
+    <View style={tw`flex-1 bg-white`}>
+    <ScrollView contentContainerStyle={tw`bg-white`}>
       <ScreenNavigation title='Account' homeNav={false} remove={false} />
       <View style={tw`px-5`}>
         <CustomInput placeholder="Babatunde Ashafa" editable={false} className="border-0 bg-color-5E5 h-[66px] mb-0" />
         <CustomInput placeholder="0804499494" editable={false} className="border-0 bg-color-5E5 h-[66px] mb-0 mt-5" />
         <CustomInput placeholder="Babatunde Ashafa" editable={false} className="border-0 bg-color-5E5 h-[66px] mb-0 mt-5" />
         <Text style={tw`mt-[48px] font-poppins-medium text-[14px]`}>Latest Transaction</Text>
-        <View style={tw`shadow-sm w-full bg-white p-6`}>
+        <View style={tw`shadow-sm w-full bg-white p-6 mb-4`}>
           <View>
             <Text style={tw`font-poppins-thin text-[10px]`}>Purchase of Tomatoes - Kilani farms</Text>
             <View style={tw`flex-row justify-between mt-4`}>
@@ -24,6 +25,7 @@ const Account = () => {
         </View>
       </View>
     </ScrollView>
+    </View>
   )
 }
 

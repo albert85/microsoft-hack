@@ -1,14 +1,18 @@
+import React, { useContext } from "react";
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import tw from '../../../tailwind';
 import Icon from "@expo/vector-icons/FontAwesome5"
 import { useNavigation } from '@react-navigation/native';
+import { AppContext } from '../../../App';
 
 const ScreenNavigation = ({ title = "", homeNav = true, remove = true }) => {
   const navigate = useNavigation();
+  const {setAuth} = useContext(AppContext);
   return (
     <View style={tw`py-10 pt-12 pl-5 pb-5 flex-row justify-between items-center bg-white w-full mb-[26px] shadow-lg`}>
       {remove && (<TouchableOpacity onPress={()=> {
         if(homeNav){
+          setAuth(false);
         }else {
           navigate.goBack();
         }

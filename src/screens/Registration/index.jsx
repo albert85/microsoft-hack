@@ -48,14 +48,6 @@ const Registration = () => {
                 )}
               </View>
             </View>
-            <View style={tw`flex-row mt-2 justify-end items-center`}>
-              <Text style={tw`font-poppins-regular text-2C2 text-[14px]`}>
-                Already have an account?{' '}
-              </Text>
-              <TouchableOpacity onPress={() => navigate.goBack()}>
-                <Text style={tw`font-poppins-bold`}>Login</Text>
-              </TouchableOpacity>
-            </View>
             <View style={tw`w-full items-center mt-10`}>
               <TouchableOpacity
                 style={tw`bg-black h-[60px] justify-center items-center w-[50] rounded-md`}
@@ -66,6 +58,14 @@ const Registration = () => {
               </TouchableOpacity>
             </View>
           </View>
+          <View style={tw`flex-row mt-10 justify-center items-center`}>
+              <Text style={tw`font-poppins-regular text-2C2 text-[14px]`}>
+                Already have an account?{' '}
+              </Text>
+              <TouchableOpacity onPress={() => navigate.goBack()}>
+                <Text style={tw`font-poppins-bold`}>LOGIN HERE</Text>
+              </TouchableOpacity>
+            </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -13,6 +13,10 @@ module.exports = {
         "color-8F8": "#F8F8F8",
         "color-0A0": "#A0A0A0",
         "color-C8B": "#0CBC8B",
+        "color-2C9rgba": "rgba(112, 66, 201, 0.15)",
+        "color-2C9": "#7042C9",
+        "trans-C8E": "rgba(251, 220, 142, 0.4)",
+        "trans-1AD": "rgba(13, 177, 173, 0.34)",
       },
       fontFamily: {
         "poppins-medium": ["Poppins_500Medium"],
