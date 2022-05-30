@@ -9,16 +9,17 @@ import { useNavigation } from '@react-navigation/native';
 
 const ItemDetails = (props) => {
   const navigate = useNavigation();
-
+  let detail = props.route.params.item
+  console.log(props.route.params.item)
   return (
     <ScrollView contentContainerStyle={tw`bg-white pb-6`}>
       <ScreenNavigation title='Item Details' homeNav={false} />
       <View style={tw`px-5`}>
-      <Text style={tw`font-poppins-semibold text-[18px] mb-[32px]`}>{props?.route?.params?.item?.title}</Text>
-      <Image source={require("../../../assets/big_tom.png")} style={[{ height: 250, width: "100%"}, tw`rounded-xl`]} />
+      <Text style={tw`font-poppins-semibold text-[18px] mb-[32px]`}>{detail?.seller}</Text>
+      <Image source={detail?.product_avatar} style={[{ height: 250, width: "100%"}, tw`rounded-xl`]} />
       <View style={tw`mt-4`}>
-      <Text style={tw`font-poppins-bold text-4`}>Basket of Tomatoes</Text>
-      <Text style={tw`font-poppins-regular text-3 mb-3`}>24 bags available</Text>
+      <Text style={tw`font-poppins-bold text-4`}>{detail?.product_name}</Text>
+      <Text style={tw`font-poppins-regular text-3 mb-3`}>{detail?.quantity} {detail?.sack_type} available</Text>
       <View style={tw`flex-row justify-between h-[56px] w-full`}>
         <TouchableOpacity>
           <View style={tw`items-center justify-center rounded-lg bg-black w-[56px] h-[56px]`}>
@@ -26,7 +27,7 @@ const ItemDetails = (props) => {
           </View>
         </TouchableOpacity>
         <View style={tw`items-center justify-center h-full bg-color-5E5 w-[59%] rounded-lg`}>
-          <Text style={tw`font-poppins-bold text-[14px]`}>7 items</Text>
+          <Text style={tw`font-poppins-bold text-[14px]`}>1</Text>
         </View>
         <TouchableOpacity>
           <View style={tw`items-center justify-center rounded-lg bg-black w-[56px] h-[56px]`}>

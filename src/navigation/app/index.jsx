@@ -3,6 +3,7 @@ import {View, Image, Text} from "react-native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from '../../screens/Dashboard';
 import tw from '../../../tailwind';
+import {MaterialIcons} from '@expo/vector-icons'
 import ItemDetailStack from './itemDetails';
 import VoiceSearch from '../../screens/VoiceSearch';
 import Account from '../../screens/Account';
@@ -18,14 +19,15 @@ return(
     options={{
       tabBarShowLabel: false,
       tabBarIcon: ({ focused }) => (<View style={tw`items-center p-3`}>
-        <Image source={require("../../../assets/home.png")}
+        <MaterialIcons name="home" size={35} color={focused ? 'black' : '#E3E3E3'} />
+        {/* <Image source={require("../../../assets/home.png")}
         style={{
           height: 20,
           width: 20,
           tintColor: focused ? 'black' : '#E3E3E3'
         }}
-        />
-        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`font-bold text-[12px]`]}>Home</Text>
+        /> */}
+        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`text-[12px]`]}>Home</Text>
       </View>)
     }}
     />
@@ -35,14 +37,15 @@ return(
     options={{
       tabBarShowLabel: false,
       tabBarIcon: ({ focused }) => (<View style={tw`items-center p-3`}>
-        <Image source={require("../../../assets/voice.png")}
+        <MaterialIcons name="record-voice-over" size={35} color={focused ? 'black' : '#E3E3E3'} />
+        {/* <Image source={require("../../../assets/voice.png")}
         style={{
           height: 20,
           width: 20,
           tintColor: focused ? 'black' : '#E3E3E3'
         }}
-        />
-        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`font-bold text-[12px]`]}>Voice Search</Text>
+        /> */}
+        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`text-[12px]`]}>Voice Search</Text>
       </View>)
     }}
     />
@@ -52,14 +55,15 @@ return(
     options={{
       tabBarShowLabel: false,
       tabBarIcon: ({ focused }) => (<View style={tw`items-center p-3`}>
-        <Image source={require("../../../assets/cart.png")}
+        <MaterialIcons name="shopping-cart" size={35} color={focused ? 'black' : '#E3E3E3'} />
+        {/* <Image source={require("../../../assets/cart.png")}
         style={{
           height: 20,
           width: 20,
           tintColor: focused ? 'black' : '#E3E3E3'
         }}
-        />
-        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`font-bold text-[12px]`]}>My Orders</Text>
+        /> */}
+        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`text-[12px]`]}>My Orders</Text>
       </View>)
     }}
     />
@@ -69,14 +73,15 @@ return(
     options={{
       tabBarShowLabel: false,
       tabBarIcon: ({ focused }) => (<View style={tw`items-center p-3`}>
-        <Image source={require("../../../assets/account.png")}
+        <MaterialIcons name="person" size={35} color={focused ? 'black' : '#E3E3E3'} />
+        {/* <Image source={require("../../../assets/account.png")}
         style={{
           height: 20,
           width: 20,
           tintColor: focused ? 'black' : '#E3E3E3'
         }}
-        />
-        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`font-bold text-[12px]`]}>Account</Text>
+        /> */}
+        <Text style={[{ color: focused ? 'black': '#E3E3E3'}, tw`text-[12px]`]}>Account</Text>
       </View>)
     }}
     />
