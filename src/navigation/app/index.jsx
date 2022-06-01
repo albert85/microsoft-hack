@@ -13,7 +13,7 @@ const Stack = createBottomTabNavigator();
 
 const AppStack = () => {
 return(
-  <Stack.Navigator screenOptions={{ headerShown: false}}>
+  <Stack.Navigator screenOptions={{ headerShown: false, tabBarStyle: { height: 70}}}>
     <Stack.Screen
     name="Dashboard"
     component={ItemDetailStack}

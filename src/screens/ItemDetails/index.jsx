@@ -10,7 +10,6 @@ import { useNavigation } from '@react-navigation/native';
 const ItemDetails = (props) => {
   const navigate = useNavigation();
   let detail = props.route.params.item
-  console.log(props.route.params.item)
   return (
     <ScrollView contentContainerStyle={tw`bg-white pb-6`}>
       <ScreenNavigation title='Item Details' homeNav={false} />

@@ -66,7 +66,8 @@ const Dashboard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:"#fff"
+    backgroundColor:"#fff",
+    height: "70%"
   },
   imageLowerContainer:{
     backgroundColor:"#000",

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import {
-  StyleSheet, Text, View, TouchableOpacity, ActivityIndicator,Image,FlatList, Platform,
+  StyleSheet, Text, View, TouchableOpacity,Image,FlatList, Platform,
 } from 'react-native'
 import * as FileSystem from 'expo-file-system';
 import { Audio } from 'expo-av';
@@ -92,11 +92,9 @@ const VoiceSearch = () => {
           "Content-Type": "application/json",
         },
       })
-      console.log(data.result)
       if (data.result.RecognitionStatus === "Success"){
         setSearchView(true)
         setSearchWord(data.result.DisplayText)
-        console.log(searchWord, "*********")
         let x = data.result.DisplayText
         searchText = x.replace('.','')
         
@@ -135,8 +133,6 @@ const VoiceSearch = () => {
       await recording.prepareToRecordAsync(recordingOptions)
       await recording.startAsync()
       setRecording(recording);
-      // console.log('Recording started');
-      // console.log(recording, "recording")
     } catch (err) {
       console.error('Failed to start recording', err);
     }
@@ -149,6 +145,7 @@ const VoiceSearch = () => {
     await recording.stopAndUnloadAsync();
     getTranscription()
   }
+
   const RenderLatest = ({item}) => {
     return (
       <TouchableOpacity onPress={() => navigate.navigate("ItemDetail", {
