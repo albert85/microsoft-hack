@@ -2,52 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import {View, Text, Image, FlatList, TouchableOpacity, StyleSheet} from "react-native"
 import tw from '../../../tailwind';
 import ScreenNavigation from '../../components/screenNav';
-
+// import ProductCard from '../../components/ProductCard';
+import { data } from '../../../assets/Data';
 const Dashboard = () => {
   const navigate = useNavigation();
-
-  const data = [
-    {
-      id: 1,
-      title: "Kilani Farm",    
-      product_avatar: require("../../../assets/ProductImages/tomatoes.png"),
-      product_name: "Tomatoes",
-      sack_type:"basket",
-      quantity:35,
-      seller:" Dan Abeey Farms",
-      seller_id:45,
-      seller_address: "No 5, Ade Street, Abuja",
-      unit_price: 25000,
-      seller_avatar: require("../../../assets/user.png"),
-      views: 87
-    },
-    {
-      id: 2,
-      product_avatar: require("../../../assets/ProductImages/chicken.png"),
-      product_name: "Chicken",
-      sack_type:"2.5kg/piece",
-      quantity:53,
-      seller:" Chi Farms",
-      seller_id:15,
-      seller_address: "No 25, Ivan way, Kogi State",
-      unit_price: 15000,
-      seller_avatar: require("../../../assets/user.png"),
-      views: 30
-    },
-    {
-      id: 3,
-      product_avatar: require("../../../assets/ProductImages/egg.png"),
-      product_name: "Egg",
-      sack_type:"crete",
-      quantity:133,
-      seller:" Baba Farms",
-      seller_id:15,
-      seller_address: "Yaya Village, Rivers State",
-      unit_price: 5000,
-      seller_avatar: require("../../../assets/user.png"),
-      views: 12
-    }
-  ]
 
   const RenderLatest = ({item}) => {
     return (
@@ -57,6 +15,10 @@ const Dashboard = () => {
       <View style={tw`shadow-md bg-white w-full py-[20px] px-[12px] rounded-lg mb-5`}>
         <View>
           <Image source={item?.product_avatar} style={[tw`rounded-xl`,{ height: 150, width: "100%"}]} />
+          <View style={styles.imageLowerContainer}>
+            <Text style={styles.imageFirstText}>{item?.product_name}</Text>
+            <Text style={styles.imageSecondText}>{item?.quantity} {item?.sack_type} available</Text>
+          </View>
         </View>
         <View style={tw`flex-row justify-between mt-3`}>
           <View style={tw`flex-row items-center`}>
@@ -106,6 +68,23 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor:"#fff"
   },
+  imageLowerContainer:{
+    backgroundColor:"#000",
+    marginTop:-70,
+    margin:"5%",
+    padding:5,
+    borderRadius:5,
+  }, 
+  imageFirstText:{
+    fontSize:17,
+    color:"#fff",
+    fontFamily:"Poppins_700Bold",
+  },
+  imageSecondText:{
+    fontSize:12,
+    color:"#fff",
+    fontFamily:"Poppins_400Regular",
+  }
 })
 export default Dashboard;
 
