@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import tw from '../../../tailwind';
-import Icon from "@expo/vector-icons/FontAwesome5"
+// import Icon from "@expo/vector-icons/FontAwesome5"
+import {MaterialIcons} from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../../App';
 
@@ -17,13 +18,13 @@ const ScreenNavigation = ({ title = "", homeNav = true, remove = true }) => {
           navigate.goBack();
         }
       }}>
-        {!homeNav && (<Icon name="arrow-left" size={25} />)}
-        {homeNav && (<Image source={require("../../../assets/logout.png")} style={{ height: 25, width: 25}} />)}
+        {!homeNav && (<MaterialIcons name="arrow-back" size={25} color="black" />)}
+        {homeNav && (<MaterialIcons name="logout" size={30} color="#F93972" />)}
       </TouchableOpacity>)}
       {
         !remove && <View />
       }
-    <Text style={tw`font-poppins-bold text-[20px]`}>{title}</Text>
+    <Text style={tw`font-poppins text-[20px]`}>{title}</Text>
     <View />
   </View>
   )
