@@ -12,6 +12,7 @@ module.exports = {
         "color-7F7": "#F7F7F7",
         "color-8F8": "#F8F8F8",
         "color-0A0": "#A0A0A0",
+        "color-AC4": "#00BAC4",
         "color-C8B": "#0CBC8B",
         "color-2C9rgba": "rgba(112, 66, 201, 0.15)",
         "color-2C9": "#7042C9",

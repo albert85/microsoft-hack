@@ -5,14 +5,16 @@ import tw from '../../../tailwind';
 import {MaterialIcons} from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../../App';
+import { firebaseAuth, app } from '../../../firebase.config';
 
 const ScreenNavigation = ({ title = "", homeNav = true, remove = true }) => {
   const navigate = useNavigation();
   const {setAuth} = useContext(AppContext);
   return (
     <View style={tw`py-10 pt-12 pl-5 pb-5 flex-row justify-between items-center bg-white w-full mb-[26px] shadow-lg`}>
-      {remove && (<TouchableOpacity onPress={()=> {
+      {remove && (<TouchableOpacity onPress={ async ()=> {
         if(homeNav){
+          await firebaseAuth.signOut(app);
           setAuth(false);
         }else {
           navigate.goBack();
