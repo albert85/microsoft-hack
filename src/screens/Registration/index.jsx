@@ -12,10 +12,39 @@ import {
 } from 'react-native';
 import tw from '../../../tailwind';
 import CustomInput from '../../components/inputText';
+import {firestoreStore, app as auth, firebaseAuth } from '../../../firebase.config';
 
 const Registration = () => {
+  const myDbAuth = firestoreStore.getFirestore()
   const navigate = useNavigation();
   const [viewPsd, setViewPsd] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState({ firstName: '', lastName: '', email: '', password: '', phone: ''})
+
+  const handleUserInput = (field, value) => {
+    setUserDetails(prev => ({...prev, [field]: value}))
+  }
+
+  const handleSubmitButton = async () => {
+    setLoading(true);
+    try {
+      const userCredentials = await firebaseAuth.createUserWithEmailAndPassword(auth, userDetails.email, userDetails.password);
+      const collectionRef = firestoreStore.doc(myDbAuth, "users/", userCredentials.user.uid);
+      const user = await firestoreStore.setDoc(collectionRef,{
+        firstName: userDetails.firstName,
+        email: userDetails.email,
+        lastName: userDetails.lastName,
+        phone: userDetails.phone,
+      })
+      
+      console.log(user)
+      
+    } catch (error) {
+     console.log(error) 
+    }
+    setLoading(false);
+  }
+
   return (
     <KeyboardAvoidingView>
       <ScrollView>
@@ -30,11 +59,12 @@ const Registration = () => {
             <Text style={tw`text-center font-poppins-regular text-[14px]`}>
               Lets get you started already
             </Text>
-            <CustomInput placeholder="First Name" />
-            <CustomInput placeholder="Last Name" />
-            <CustomInput placeholder="Phone Number" />
+            <CustomInput onChangeText={(text) => handleUserInput("firstName", text)} placeholder="First Name" />
+            <CustomInput onChangeText={(text) => handleUserInput("lastName", text)} placeholder="Last Name" />
+            <CustomInput onChangeText={(text) => handleUserInput("phone", text)} placeholder="Phone Number" />
+            <CustomInput onChangeText={(text) => handleUserInput("email", text)} placeholder="Email Address" />
             <View style={tw`relative`}>
-              <CustomInput secureTextEntry={viewPsd} placeholder="Password" />
+              <CustomInput onChangeText={(text) => handleUserInput("password", text)} secureTextEntry={viewPsd} placeholder="Password" />
               <View style={tw`absolute bottom-1/5 right-6`}>
                 {!viewPsd && (
                   <TouchableOpacity onPress={() => setViewPsd((prev) => !prev)}>
@@ -50,10 +80,12 @@ const Registration = () => {
             </View>
             <View style={tw`w-full items-center mt-10`}>
               <TouchableOpacity
+                onPress={handleSubmitButton}
+                disabled={loading}
                 style={tw`bg-black h-[60px] justify-center items-center w-[50] rounded-md`}
               >
                 <Text style={tw`text-white font-poppins-medium text-[14px]`}>
-                  Register
+                  {loading ? "Loading..." : "Register"}
                 </Text>
               </TouchableOpacity>
             </View>

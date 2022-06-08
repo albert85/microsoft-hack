@@ -1,13 +1,31 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigation } from '@react-navigation/native';
 import {View, Text, KeyboardAvoidingView, StyleSheet, TouchableOpacity, Image} from 'react-native'
 import tw from '../../../tailwind';
 import CustomInput from '../../components/inputText';
 import { AppContext } from '../../../App';
+import { firebaseAuth, app as appAuth } from '../../../firebase.config';
 
 const Login = () => {
   const navigate = useNavigation();
   const {setAuth} = useContext(AppContext);
+  const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState({email: '', password: ''})
+
+  const handleUserIput = (field, value) => {
+    setUserDetails((prev) => ({...prev, [field]: value}));
+  }
+
+  const handleSubmit = async () => {
+    try {
+      const userCredential = await firebaseAuth.signInWithEmailAndPassword(appAuth, userDetails.email, userDetails.password)
+      if(userCredential.user !== null){
+       setAuth(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return(
     <KeyboardAvoidingView>
@@ -17,11 +35,11 @@ const Login = () => {
         <Image source={require("../../../assets/logo.png")} style={{ height: 100, width: 100}} />
         </View>
         <Text style={tw`text-center font-poppins-regular text-[14px]`}>Welcome Back, we’ve missed you!</Text>
-        <CustomInput placeholder="Phone Number" />
-        <CustomInput placeholder="Password" />
+        <CustomInput editable={!loading} onChangeText={(text) => handleUserIput("email", text)} placeholder="Email Address" />
+        <CustomInput editable={!loading} onChangeText={(text) => handleUserIput("password", text)} placeholder="Password" secureTextEntry />
         <View style={tw`w-full items-center mt-10`}>
-        <TouchableOpacity onPress={()=> setAuth(true)} style={tw`bg-black h-[60px] justify-center items-center w-[50] rounded-md`}>
-          <Text style={tw`text-white font-poppins-medium text-[14px]`}>Login</Text>
+        <TouchableOpacity disabled={loading} onPress={handleSubmit} style={tw`bg-black h-[60px] justify-center items-center w-[50] rounded-md`}>
+          <Text style={tw`text-white font-poppins-medium text-[14px]`}>{ loading ? "Loading..." : "Login"}</Text>
         </TouchableOpacity>
         </View>
       </View>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import {
   StyleSheet, Text, View, TouchableOpacity,Image,FlatList, Platform,
@@ -10,6 +10,8 @@ import ScreenNavigation from '../../components/screenNav';
 import {MaterialIcons} from '@expo/vector-icons'
 import axios from 'axios'
 import { data } from '../../../assets/Data';
+import { collection, query, where } from 'firebase/firestore';
+import { firestoreStore } from '../../../firebase.config';
 
 
 const styles = StyleSheet.create({
@@ -62,20 +64,52 @@ const recordingOptions = {
   },
 }
 const VoiceSearch = () => {
+  const firestoreInstance = firestoreStore.getFirestore();
   const navigate = useNavigation();
   const [isRecording, setIsrecording] = useState(false);
   const [isFetching, setIsfetching] = useState(false);
+  const [loading, setLoading] = useState(false);
   const[noResult, setNoResult]= useState(false);
+  const [products, setProducts] = useState([]);
   const [searchWord, setSearchWord] = useState("");
   const [recording, setRecording] = useState(false);
-  const [productData, setProductData] = useState([])
-  const [initialProductData, setInitialProductData] = useState([])
   const [searchView, setSearchView] = useState(false)
+
+  const handleFetchDetails = useCallback(
+   async () => {
+     console.log('start loading...')
+    setLoading(true);
+    try {
+      const productQuery = query(collection(firestoreInstance, "products"), where("product_name", "==", searchWord));
+      const usersDb = await firestoreStore.getDocs(firestoreStore.collection(firestoreInstance, "users"));
+      const productDb = await firestoreStore.getDocs(productQuery);
+      let realproducts = productDb.docs.map((y) => ({...y.data(), id: y.id}));
+      let products = realproducts;
+      
+      const mapUsers = usersDb.docs.map((x) => ({...x.data(), id: x.id }));
+      products = products.map(eachProduct => {
+        const [sellerDetails] = mapUsers.filter((user) => user.id === eachProduct.seller_id)
+        return {
+          ...eachProduct,
+          seller_avatar: sellerDetails.profile
+        }
+      })
+
+      console.log('change 1', products);
+      setProducts(products);
+      
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }, [searchWord])
+
+  useEffect(()=> {
+    handleFetchDetails();
+  },[searchWord]);
+
+
   let searchText
-  useEffect(() => {  
-    setInitialProductData(data)
-    },
-    []);
   const getTranscription = async () => {
     setIsfetching(true)
     try {
@@ -87,26 +121,19 @@ const VoiceSearch = () => {
         type: Platform.OS === 'ios' ? 'audio/x-wav' : 'audio/m4a',
         name: Platform.OS === 'ios' ? `${Date.now()}.wav` :`${Date.now()}.m4a`,
       })
+
       const { data } = await axios.post('https://quidroo-be.herokuapp.com/bingapi', formData, {
         headers: {
           "Content-Type": "application/json",
         },
       })
+
+
       if (data.result.RecognitionStatus === "Success"){
         setSearchView(true)
-        setSearchWord(data.result.DisplayText)
         let x = data.result.DisplayText
         searchText = x.replace('.','')
-        
-        let filteredData = initialProductData.filter((item) => item.product_name.includes(searchText)).map(({id, product_name, quantity, sack_type, seller, unit_price, product_avatar, seller_avatar, views}) => ({id, product_name, quantity, sack_type, seller, unit_price, product_avatar, seller_avatar, views}));
-        console.log(filteredData, "filtered data");
-        if (filteredData.length > 0){
-          setProductData(filteredData)
-          console.log(filteredData)
-        }
-        else{
-          setNoResult(true)
-        }
+        setSearchWord(searchText)
       }
       else{
         console.log("no result")
@@ -146,6 +173,8 @@ const VoiceSearch = () => {
     getTranscription()
   }
 
+  console.log('words', searchWord);
+
   const RenderLatest = ({item}) => {
     return (
       <TouchableOpacity onPress={() => navigate.navigate("ItemDetail", {
@@ -153,16 +182,16 @@ const VoiceSearch = () => {
       })}>
       <View style={tw`shadow-md bg-white w-full py-[20px] px-[12px] rounded-lg mb-5`}>
         <View>
-          <Image source={item?.product_avatar} style={[tw`rounded-xl`,{ height: 150, width: "100%"}]} />
+          <Image source={{uri: item?.product_avatar}} style={[tw`rounded-xl`,{ height: 150, width: "100%"}]} />
         </View>
         <View style={tw`flex-row justify-between mt-3`}>
           <View style={tw`flex-row items-center`}>
             <View style={tw`mr-3`}>
-              <Image source={item?.seller_avatar} style={[{ height: 40, width: 40}, tw`rounded-full`]} />
+              <Image source={{uri: item?.seller_avatar}} style={[{ height: 40, width: 40}, tw`rounded-full`]} />
             </View>
             <View>
               <Text style={tw`font-poppins-regular text-[14px]`}>{item?.seller}</Text>
-              <Text style={tw`font-poppins-bold text-[14px] text-color-234`}>NGN {item?.unit_price?.toLocaleString()}</Text>
+              <Text style={tw`font-poppins-bold text-[14px] text-color-234`}>NGN {item?.price?.toLocaleString()}</Text>
             </View>
           </View>
           <View style={tw`flex-row items-center`}>
@@ -178,6 +207,8 @@ const VoiceSearch = () => {
     )
   }
 
+  console.log(products.length, '****');
+
     return (
       <View style={tw`bg-white flex-1`}>
         <ScreenNavigation title='Voice Search' homeNav={false} />
@@ -185,21 +216,25 @@ const VoiceSearch = () => {
           <View style={styles.searchContainer}>
             <View style={styles.searchHeaderContainer}>
               <Text style={styles.searchHeaderText}> Search Results for {searchWord}</Text>
-              <TouchableOpacity onPress={()=>{setSearchView(false); setProductData([]); setNoResult(false)}}>
+              <TouchableOpacity onPress={()=>{setSearchView(false); setProducts([]); setNoResult(false); setSearchWord('')}}>
                 <MaterialIcons name="close" size={30} color="#F93972" />
               </TouchableOpacity>
             </View>
-            {noResult && 
+            {(!loading && products.length === 0) && 
               <View style={styles.noContainer}>
                 <MaterialIcons name="error" size={100} color="#F93972" />
                 <Text style={styles.noText}>Oops! Sorry no result for {searchWord} Try again</Text>
               </View>
             }
-            <FlatList
-                data={Object.values(productData)}
+            {!loading && (<FlatList
+                data={products}
                 // keyExtractor={(item, index) => `${index}-${item.title}`}
                 renderItem={RenderLatest} 
-              />
+              />)}
+
+              {loading && (<View style={tw`h-[70%] items-center justify-center`}>
+                <Text>Loading....</Text>
+              </View>)}
           </View>
           :
           <View style={tw`h-[86%] items-center justify-center`}>
