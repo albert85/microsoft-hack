@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import {
-  StyleSheet, Text, View, TouchableOpacity,Image,FlatList, Platform,
+  StyleSheet, Text, View, TouchableNativeFeedback,Image,ActivityIndicator, FlatList,TouchableOpacity, Platform,
 } from 'react-native'
 import * as FileSystem from 'expo-file-system';
 import { Audio } from 'expo-av';
@@ -12,6 +12,7 @@ import axios from 'axios'
 import { data } from '../../../assets/Data';
 import { collection, query, where } from 'firebase/firestore';
 import { firestoreStore } from '../../../firebase.config';
+import { commaSeparator } from '../../util/util';
 
 
 const styles = StyleSheet.create({
@@ -41,7 +42,46 @@ const styles = StyleSheet.create({
     width:"70%",
     textAlign:"center",
     marginTop:20
-  }
+  },
+  card:{
+    backgroundColor: "#fff",
+    borderRadius: 13,
+    borderWidth:0.5,
+    borderColor:"#f1f1f1",
+    borderTopColor:"#fff",
+    borderBottomWidth:1,
+    marginTop:5,
+    marginBottom:5,
+    padding:15,
+  },
+  loadContainer:{
+    display:"flex",
+    flexDirection:"column",
+    justifyContent:"center",
+    alignContent:"center",
+    alignItems:"center",
+    height:"100%",
+    width:"100%",
+    backgroundColor:"#fff",
+    zIndex:100
+  },
+  imageLowerContainer:{
+    backgroundColor:"#000",
+    marginTop:-70,
+    margin:"5%",
+    padding:5,
+    borderRadius:5,
+  }, 
+  imageFirstText:{
+    fontSize:17,
+    color:"#fff",
+    fontFamily:"Poppins_700Bold",
+  },
+  imageSecondText:{
+    fontSize:12,
+    color:"#fff",
+    fontFamily:"Poppins_400Regular",
+  },
 })
 const recordingOptions = {
   android: {
@@ -74,10 +114,10 @@ const VoiceSearch = () => {
   const [searchWord, setSearchWord] = useState("");
   const [recording, setRecording] = useState(false);
   const [searchView, setSearchView] = useState(false)
+  const [x, setX] = useState(false)
 
   const handleFetchDetails = useCallback(
    async () => {
-     console.log('start loading...')
     setLoading(true);
     try {
       const productQuery = query(collection(firestoreInstance, "products"), where("product_name", "==", searchWord));
@@ -130,16 +170,19 @@ const VoiceSearch = () => {
 
 
       if (data.result.RecognitionStatus === "Success"){
+        setX(false)
         setSearchView(true)
         let x = data.result.DisplayText
         searchText = x.replace('.','')
         setSearchWord(searchText)
       }
       else{
+        setX(false)
         console.log("no result")
       }
       
     } catch (error) {
+      setX(false)
       console.log('There was an error reading file', error)
     }
     setIsfetching(false)
@@ -167,6 +210,7 @@ const VoiceSearch = () => {
 
   async function stopRecording() {
     console.log('Stopping recording..');
+    setX(true)
     setIsrecording(false)
     setRecording(undefined);
     await recording.stopAndUnloadAsync();
@@ -174,36 +218,47 @@ const VoiceSearch = () => {
   }
 
   console.log('words', searchWord);
-
+  const Loader = (x)=>{
+    if (x){
+      return(
+        <View style={styles.loadContainer}>
+          <ActivityIndicator color="green" size={32} />
+          <Text>... Searching ...</Text>
+        </View>
+      )
+    }
+  }
   const RenderLatest = ({item}) => {
     return (
-      <TouchableOpacity onPress={() => navigate.navigate("ItemDetail", {
-        item
-      })}>
-      <View style={tw`shadow-md bg-white w-full py-[20px] px-[12px] rounded-lg mb-5`}>
+      <TouchableNativeFeedback onPress={() => navigate.navigate("ItemDetail", {item})}>
+      <View style={styles.card}>
         <View>
-          <Image source={{uri: item?.product_avatar}} style={[tw`rounded-xl`,{ height: 150, width: "100%"}]} />
+          <Image source={{ uri: item?.product_avatar}} style={[tw`rounded-xl`,{ height: 150, width: "100%"}]} />
+          <View style={styles.imageLowerContainer}>
+            <Text style={styles.imageFirstText}>{item?.product_name}</Text>
+            <Text style={styles.imageSecondText}>{item?.quantity} {item?.sack_type} available</Text>
+          </View>
         </View>
         <View style={tw`flex-row justify-between mt-3`}>
           <View style={tw`flex-row items-center`}>
             <View style={tw`mr-3`}>
-              <Image source={{uri: item?.seller_avatar}} style={[{ height: 40, width: 40}, tw`rounded-full`]} />
+              <Image source={{ uri: item?.seller_avatar}} style={[{ height: 40, width: 40}, tw`rounded-full`]} />
             </View>
             <View>
-              <Text style={tw`font-poppins-regular text-[14px]`}>{item?.seller}</Text>
-              <Text style={tw`font-poppins-bold text-[14px] text-color-234`}>NGN {item?.price?.toLocaleString()}</Text>
+              <Text style={tw`font-poppins-regular text-[14px]`}>{item?.title}</Text>
+              <Text style={tw`font-poppins-bold text-[14px] text-color-234`}>NGN {commaSeparator(item?.price)}</Text>
             </View>
           </View>
           <View style={tw`flex-row items-center`}>
             <View>
             <Image source={require("../../../assets/seen.png")} style={{ height: 20, width: 20}} />
             </View>
-            <Text style={tw`font-poppins-semibold text-[14px]`}>{item?.views}</Text>
+            <Text style={tw`font-poppins-semibold text-[14px]`}>{commaSeparator(item?.views)}</Text>
           </View>
         </View>
       </View>
 
-      </TouchableOpacity>
+      </TouchableNativeFeedback>
     )
   }
 
@@ -211,7 +266,9 @@ const VoiceSearch = () => {
 
     return (
       <View style={tw`bg-white flex-1`}>
+        {Loader(x)}
         <ScreenNavigation title='Voice Search' homeNav={false} />
+        
         {searchView ?
           <View style={styles.searchContainer}>
             <View style={styles.searchHeaderContainer}>
@@ -228,13 +285,10 @@ const VoiceSearch = () => {
             }
             {!loading && (<FlatList
                 data={products}
-                // keyExtractor={(item, index) => `${index}-${item.title}`}
                 renderItem={RenderLatest} 
               />)}
 
-              {loading && (<View style={tw`h-[70%] items-center justify-center`}>
-                <Text>Loading....</Text>
-              </View>)}
+              {loading && Loader(x)}
           </View>
           :
           <View style={tw`h-[86%] items-center justify-center`}>

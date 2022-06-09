@@ -47,7 +47,7 @@ const Dashboard = () => {
               <Image source={{ uri: item?.seller_avatar}} style={[{ height: 40, width: 40}, tw`rounded-full`]} />
             </View>
             <View>
-              <Text style={tw`font-poppins-regular text-[14px]`}>{item?.seller}</Text>
+              <Text style={tw`font-poppins-regular text-[14px]`}>{item?.title}</Text>
               <Text style={tw`font-poppins-bold text-[14px] text-color-234`}>NGN {commaSeparator(item?.price)}</Text>
             </View>
           </View>

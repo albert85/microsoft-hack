@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { View, Image, Text } from 'react-native';
+import { View, Image, Text,StyleSheet } from 'react-native';
 import { app, firestoreStore } from '../../../firebase.config';
 import tw from '../../../tailwind';
 import CustomButton from '../../components/CustomButton';
@@ -9,6 +9,21 @@ import ScreenNavigation from '../../components/screenNav';
 import { serverTimestamp } from 'firebase/firestore';
 import { commaSeparator } from '../../util/util';
 
+const styles = StyleSheet.create({
+  card:{
+    backgroundColor: "#fff",
+    borderRadius: 13,
+    borderWidth:0.5,
+    display:"flex",
+    flexDirection:"row",
+    borderColor:"#f1f1f1",
+    borderTopColor:"#fff",
+    borderBottomWidth:3,
+    marginTop:5,
+    marginBottom:5,
+    padding:15,
+  },
+})
 const Payment = (props) => {
   const navigate = useNavigation();
   const firestoreInstance = firestoreStore.getFirestore();
@@ -54,7 +69,8 @@ const Payment = (props) => {
       <View style={tw`px-5 justify-between flex-col`}>
         <View>
           <CustomHeaderText title={props?.route?.params?.item?.title} />
-            <View style={tw`flex-row bg-color-items shadow-md rounded-[13px]`}>
+            {/* <View style={tw`flex-row bg-color-items shadow-md rounded-[13px]`}> */}
+            <View style={styles.card}>
               <View style={[tw`relative w-[116px]`]}>
                 <Image
                   source={{uri: data?.item?.product_avatar}}
