@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity,StyleSheet} from 'react-native';
 import tw from '../../../tailwind';
 // import Icon from "@expo/vector-icons/FontAwesome5"
 import {MaterialIcons} from '@expo/vector-icons'
@@ -21,15 +21,21 @@ const ScreenNavigation = ({ title = "", homeNav = true, remove = true }) => {
         }
       }}>
         {!homeNav && (<MaterialIcons name="arrow-back" size={25} color="black" />)}
-        {homeNav && (<MaterialIcons name="logout" size={30} color="#F93972" />)}
+        {homeNav && (<MaterialIcons name="logout" size={20} color="#F93972" />)}
       </TouchableOpacity>)}
       {
         !remove && <View />
       }
-    <Text style={tw`font-poppins text-[20px]`}>{title}</Text>
+    <Text style={styles.headerText}>{title}</Text>
     <View />
   </View>
   )
 }
-
+const styles = StyleSheet.create({
+  headerText: {
+    fontSize:15,
+    fontFamily:"Poppins_500Medium",
+    marginLeft:-30
+  },
+})
 export default ScreenNavigation;

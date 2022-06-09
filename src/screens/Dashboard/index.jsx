@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import {View, Text, Image, FlatList, TouchableOpacity, StyleSheet} from "react-native"
+import {View, Text, Image, FlatList, TouchableNativeFeedback, StyleSheet} from "react-native"
 import tw from '../../../tailwind';
 import ScreenNavigation from '../../components/screenNav';
 import useUserDetails from '../../hooks/users';
@@ -32,10 +32,8 @@ const Dashboard = () => {
 
   const RenderLatest = ({item}) => {
     return (
-      <TouchableOpacity onPress={() => navigate.navigate("ItemDetail", {
-        item
-      })}>
-      <View style={tw`shadow-md bg-white w-full py-[20px] px-[12px] rounded-lg mb-5`}>
+      <TouchableNativeFeedback onPress={() => navigate.navigate("ItemDetail", {item})}>
+      <View style={styles.card}>
         <View>
           <Image source={{ uri: item?.product_avatar}} style={[tw`rounded-xl`,{ height: 150, width: "100%"}]} />
           <View style={styles.imageLowerContainer}>
@@ -62,7 +60,7 @@ const Dashboard = () => {
         </View>
       </View>
 
-      </TouchableOpacity>
+      </TouchableNativeFeedback>
     )
   }
   return (
@@ -70,9 +68,9 @@ const Dashboard = () => {
       <ScreenNavigation title="Dashboard" />
       <Loading loading={loading}>
         <View style={tw`px-5`}>
-          <Text style={tw`font-poppins-thin text-[15px]`}> Hello</Text>
-          <Text style={tw`font-poppins-semibold text-[19px] mb-[40px]`}>{`${user?.firstName} ${user?.lastName}`}</Text>
-          <Text style={tw`font-poppins-semibold text-[18px] mb-[32px]`}>Latest Items</Text>
+          <Text style={tw`font-poppins-thin text-[15px]`}>Hello Again,</Text>
+          <Text style={styles.nameText}>{`${user?.firstName} ${user?.lastName}`}</Text> 
+          <Text style={tw`font-poppins-medium text-[18px] mt-[20px]`}>Latest Items</Text>
           <View style={styles.container}>
             <FlatList
               data={products}
@@ -92,7 +90,7 @@ const Dashboard = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor:"#fff",
-    height: "70%"
+    height: "75%"
   },
   imageLowerContainer:{
     backgroundColor:"#000",
@@ -110,7 +108,24 @@ const styles = StyleSheet.create({
     fontSize:12,
     color:"#fff",
     fontFamily:"Poppins_400Regular",
-  }
+  },
+  card:{
+    backgroundColor: "#fff",
+    borderRadius: 13,
+    borderWidth:0.5,
+    borderColor:"#f1f1f1",
+    borderTopColor:"#fff",
+    borderBottomWidth:1,
+    marginTop:5,
+    marginBottom:5,
+    padding:15,
+  },
+  nameText:{
+    fontSize:15,
+    color:"#000",
+    fontFamily:"Poppins_500Medium",
+    marginTop:-5,
+  },
 })
 export default Dashboard;
 

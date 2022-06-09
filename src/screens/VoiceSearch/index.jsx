@@ -238,19 +238,19 @@ const VoiceSearch = () => {
           </View>
           :
           <View style={tw`h-[86%] items-center justify-center`}>
-              <Text style={tw`font-poppins-medium text-6 mb-[25px]`}>{!recording  ? "Click to use Voice Search" : "Speak Now!"}</Text>
-              <View style={tw`p-[100px] bg-color-5E5`}>
+              <Text style={tw`font-poppins-medium text-5 mb-[14px]`}>{!recording  ? "Click to use Voice Search" : "Speak Now!"}</Text>
+              <View style={tw`p-[60px] bg-color-5E5`}>
               {!recording && ( <TouchableOpacity onPress={()=>{
                   setRecording((prev) => !prev)
                   startRecording()
               }}>
-                  <MaterialIcons name="keyboard-voice" size={200} color="black" />
+                  <MaterialIcons name="keyboard-voice" size={100} color="black" />
                 </TouchableOpacity>)}
                 {recording && (<TouchableOpacity onPress={()=> {
                   setRecording((prev) => !prev)
                   stopRecording()
                 }}>
-                  <MaterialIcons name="keyboard-voice" size={200} color="#0DB1AD" />
+                  <MaterialIcons name="keyboard-voice" size={100} color="#0DB1AD" />
                 </TouchableOpacity>)}
 
               </View>
