@@ -58,7 +58,7 @@ const OrderDetails = (props) => {
               <View style={tw`flex-row`}>
                 <Text style={tw`font-poppins-bold`}>To: </Text>
                 <Text style={tw`font-poppins-regular`}>
-                  {detail?.product?.address}
+                  {detail?.destination}
                 </Text>
               </View>
               <View style={tw`flex-row`}>

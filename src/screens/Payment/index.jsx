@@ -27,6 +27,7 @@ const Payment = (props) => {
         "status": 'payment completed',
         "logisticStatus": "pending",
         "userId": app.currentUser.uid,
+        "destination": data?.selectedItems.destination,
         "createdAt": serverTimestamp()
       }
   
