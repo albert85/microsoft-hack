@@ -76,20 +76,50 @@ const VoiceSearch = () => {
     setInitialProductData(data)
     },
     []);
-  const getTranscription = async () => {
-    setIsfetching(true)
+
+  const getTranscription2 = async () => {
     try {
       const { uri } = await FileSystem.getInfoAsync(recording.getURI())
-      let cleanUri= uri.slice(7);
       const formData = new FormData()
       formData.append('audiofile', {
         uri,
         type: Platform.OS === 'ios' ? 'audio/x-wav' : 'audio/m4a',
         name: Platform.OS === 'ios' ? `${Date.now()}.wav` :`${Date.now()}.m4a`,
       })
-      const { data } = await axios.post('https://quidroo-be.herokuapp.com/bingapi', formData, {
+      const response = await fetch('https://quidroo-be.herokuapp.com/bingapi', {
+        method: 'post',
         headers: {
-          "Content-Type": "application/json",
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: formData
+      });
+      const json = await response.json();
+      console.log(json.result)
+      return json.result;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const getTranscription = async () => {
+    setIsfetching(true)
+    try {
+      const { uri } = await FileSystem.getInfoAsync(recording.getURI())
+      const formData = new FormData()
+      formData.append('audiofile', {
+        uri,
+        type: Platform.OS === 'ios' ? 'audio/x-wav' : 'audio/m4a',
+        name: Platform.OS === 'ios' ? `${Date.now()}.wav` :`${Date.now()}.m4a`,
+      })
+      const { data } = await axios.post('http://127.0.0.1:8000/bingapi', formData, {
+      // const { data } = await axios.post('https://quidroo-be.herokuapp.com/bingapi', formData, {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          // "Accept":"application/json, text/plain, /",
+          // "Content-Type": "multipart/form-data"
+          // "Content-Type":  "application/x-www-form-urlencoded", 
+          "Accept": "application/json"
         },
       })
       console.log(data.result)
@@ -115,7 +145,20 @@ const VoiceSearch = () => {
       }
       
     } catch (error) {
-      console.log('There was an error reading file', error)
+      // console.log('There was an error reading file', error)
+      // console.log(error.response.data, "detail error")
+      if (error.response) {
+        // Request made and server responded
+        // console.log(error.response.data);
+        console.log(error.response.status);
+        console.log('Error', error.message);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
     }
     setIsfetching(false)
   }
